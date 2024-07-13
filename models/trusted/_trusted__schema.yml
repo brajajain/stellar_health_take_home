@@ -1,0 +1,33 @@
+models:
+- name: scenario_1_medical_group_retired_patients
+  description: The 'scenario_1_medical_group_retired_patients' model is designed to
+    provide a detailed analysis of the patient demographics within different medical
+    groups. It specifically focuses on the age-based categorization of patients into
+    'retired' (age 65 and above) and 'working' (below age 65). The model calculates
+    the total number of retired and working patients for each medical group and computes
+    the percentage of retired patients. The output is sorted in descending order of
+    the percentage of retired patients, and limited to the top 25 groups. The model
+    uses data from the 'fact__patient_access', 'dim__patient', and 'dim__group' tables
+    in the 'stellar_health' database.
+  columns:
+  - name: group_id
+    data_type: varchar
+    description: The unique identifier for each medical group. This is a foreign key
+      that links to the 'group_id' field in the 'dim__user' table.
+  - name: group_name
+    data_type: varchar
+  - name: total_patients
+    data_type: bigint
+  - name: average_age
+    data_type: double
+  - name: group_count
+    data_type: bigint
+- name: scenario_1_patient_records
+  description: The 'scenario_1_patient_records' model is a count of unique patient
+    IDs from the 'fact__patient_access' table in the 'stellar_health' database. The
+    model only includes records where the 'accessed_date' is within the last 14 months
+    and the 'users_accessed_patient_to_date' is 5 or more. The output is a single
+    bigint value representing the count of distinct patient IDs that meet these criteria.
+  columns:
+  - name: total_patients
+    data_type: bigint

@@ -1,0 +1,135 @@
+version: 2
+models:
+  - name: fact__patient_access
+    description: The 'fact__patient_access' model provides a comprehensive view of
+      patient access data. It includes details about the user, medical group,
+      and patient, along with the date of access. The model also provides
+      various counts and sums related to access, such as the total number of
+      accesses by a user or medical group, the number of accesses by a user or
+      medical group on a specific date, and the cumulative number of accesses by
+      a user or medical group up to a certain date. Additionally, the model
+      provides similar counts and sums for patient-specific accesses. It also
+      includes the total number of unique users and medical groups that have
+      accessed a specific patient's data, as well as the cumulative number of
+      unique users and medical groups that have accessed a patient's data up to
+      a certain date. The data in this model is derived from the
+      'raw_stellar_health_application__patient_access_log' and 'dim__user'
+      tables.
+    columns:
+      - name: access_id
+        description: The unique identifier for each access event. This is a primary key
+          in the fact__patient_access model.
+        data_type: varchar
+      - name: user_id
+        description: The unique identifier for each user. This is a foreign key that
+          links to the 'id' field in the 'dim__user' table.
+        data_type: varchar
+      - name: group_id
+        description: The unique identifier for each medical group. This is a foreign key
+          that links to the 'group_id' field in the 'dim__user' table.
+        data_type: varchar
+      - name: patient_id
+        description: The unique identifier for each patient. This is a foreign key that
+          links to the 'patient_id' field in the
+          'raw_stellar_health_application__patient_access_log' table.
+        data_type: varchar
+      - name: accessed_date
+        description: The timestamp indicating when a patient's record was accessed by a
+          user. This field is used to track the date and time of each access
+          event.
+        data_type: timestamp
+      - name: total_accesses_by_user
+        description: The total number of times a specific user has accessed any
+          patient's records. This is calculated by counting all access events
+          for each user.
+        data_type: bigint
+      - name: total_accesses_by_medical_group
+        description: The total number of times any user within a specific medical group
+          has accessed any patient's records. This is calculated by counting all
+          access events for each medical group.
+        data_type: bigint
+      - name: accesses_by_medical_group_on_date
+        description: This column represents the total number of accesses made by a
+          specific medical group on a particular date. It is calculated by
+          counting the number of entries for each medical group and date
+          combination in the patient access log.
+        data_type: bigint
+      - name: accesses_by_user_on_date
+        description: This column represents the total number of accesses made by a
+          specific user on a particular date. It is calculated by counting the
+          number of entries for each user and date combination in the patient
+          access log.
+        data_type: bigint
+      - name: accesses_by_user_to_date
+        description: This column represents the cumulative number of accesses made by a
+          specific user up to a particular date. It is calculated by summing the
+          number of entries for each user, ordered by date, in the patient
+          access log.
+        data_type: hugeint
+      - name: accesses_by_medical_group_to_date
+        description: This column represents the cumulative count of accesses made by a
+          specific medical group up to a certain date. It is calculated using a
+          running total method, where each new access by the medical group
+          increases the count.
+        data_type: hugeint
+      - name: total_patient_accesses
+        description: This column represents the total number of times a specific
+          patient's records have been accessed, irrespective of the user or
+          medical group. It provides a measure of how frequently a patient's
+          records are viewed.
+        data_type: bigint
+      - name: total_patient_accesses_by_user
+        description: This column represents the total number of times a specific user
+          has accessed a specific patient's records. It provides a measure of
+          how frequently a user interacts with a particular patient's records.
+        data_type: bigint
+      - name: total_patient_accesses_by_medical_group
+        description: This column represents the total number of times a patient has been
+          accessed by a specific medical group. It is calculated by counting the
+          number of times a patient's ID appears in the access log for each
+          medical group.
+        data_type: bigint
+      - name: patient_accesses_by_medical_group_on_date
+        description: This column represents the number of times a patient was accessed
+          by a specific medical group on a particular date. It is calculated by
+          counting the number of times a patient's ID appears in the access log
+          for each medical group on a specific date.
+        data_type: bigint
+      - name: patient_accesses_by_user_on_date
+        description: This column represents the number of times a patient was accessed
+          by a specific user on a particular date. It is calculated by counting
+          the number of times a patient's ID appears in the access log for each
+          user on a specific date.
+        data_type: bigint
+      - name: patient_accesses_by_user_to_date
+        description: This column represents the cumulative count of times a specific
+          user has accessed a specific patient's information up to the current
+          date. It is calculated using a running total, where the count
+          increases with each new access by the user to the patient's data.
+        data_type: hugeint
+      - name: patient_accesses_by_medical_group_to_date
+        description: This column represents the cumulative count of times a specific
+          medical group has accessed a specific patient's information up to the
+          current date. It is calculated using a running total, where the count
+          increases with each new access by the medical group to the patient's
+          data.
+        data_type: hugeint
+      - name: total_users_accessed_patient
+        description: This column represents the total number of unique users who have
+          accessed a specific patient's information. It is calculated by
+          counting the distinct user IDs associated with each patient ID.
+        data_type: bigint
+      - name: total_medical_groups_accessed_patient
+        description: This column represents the total number of unique medical groups
+          that have accessed a particular patient's information.
+        data_type: bigint
+      - name: users_accessed_patient_to_date
+        description: This column represents the cumulative count of unique users who
+          have accessed a particular patient's information up to the current
+          date. The count is ordered by the date of access.
+        data_type: bigint
+      - name: medical_groups_accessed_patient_to_date
+        description: This column represents the cumulative count of unique medical
+          groups that have accessed a particular patient's information up to the
+          current date. The count is ordered by the date of access.
+        data_type: bigint

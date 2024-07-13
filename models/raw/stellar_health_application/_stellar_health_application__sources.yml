@@ -1,0 +1,8 @@
+sources:
+  - name: stellar_health_application
+    database: stellar_health
+    tables:
+      - name: medical_group_list
+      - name: medical_group_user
+      - name: patient_demographics
+      - name: patient_access_log

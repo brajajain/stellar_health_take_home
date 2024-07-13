@@ -1,0 +1,13 @@
+{
+    "dbt.enableNewLineagePanel": true,
+    "dbt.perspectiveTheme": "Vintage",
+    "emeraldwalk.runonsave": {
+        "commands": [
+            {
+                "match": ".*\\.sql(\\.jinja)?",
+                "isAsync": true,
+                "cmd": "sqlfmt -l 120 ${file}"
+            }
+        ]
+    }
+}

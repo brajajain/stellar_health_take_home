@@ -1,0 +1,44 @@
+name: 'stellar_health'
+
+config-version: 2
+version: '0.1'
+
+profile: 'stellar_health'
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+analysis-paths: ["analysis"]
+macro-paths: ["macros"]
+
+target-path: "target"
+clean-targets:
+    - "target"
+    - "dbt_packages"
+    - "logs"
+
+require-dbt-version: [">=1.0.0", "<2.0.0"]
+
+
+# DATE FORMATTING
+vars:
+    "dbt_date:time_zone": "America/New_York"
+    
+# DATA MODEL ARCHITECTURE
+seeds: 
+  +docs:
+    node_color: '#cd7f32'
+
+models:
+  stellar_health:
+    materialized: table
+    raw:
+      materialized: view
+      +docs:
+        node_color: '#CD7F32'
+    transformed:
+      materialized: view
+      +docs:
+        node_color: 'silver'
+    +docs:
+      node_color: 'gold'

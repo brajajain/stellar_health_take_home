@@ -1,0 +1,33 @@
+files: models/
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+
+  - repo: https://github.com/tconbeer/sqlfmt
+    rev: v0.18.0
+    hooks:
+      - id: sqlfmt
+        language_version: python
+        additional_dependencies: ['.[jinjafmt]']
+        
+  - repo: https://github.com/dbt-checkpoint/dbt-checkpoint
+    rev: v1.1.1
+    hooks:
+      # dbt commands
+      - id: dbt-deps
+      - id: dbt-docs-generate
+      # modifiers
+      - id: unify-column-description
+      - id: remove-script-semicolon
+      # script checks
+      - id: check-script-semicolon
+      - id: check-script-has-no-table-name
+      # source checks
+      - id: check-source-table-has-description
+      # model checks
+      - id: check-model-has-description

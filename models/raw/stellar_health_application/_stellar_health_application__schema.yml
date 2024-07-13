@@ -1,0 +1,179 @@
+version: 2
+models:
+  - name: raw_stellar_health_application__medical_group_list
+    columns:
+      - name: id
+        data_type: varchar
+        description: The unique identifier for each medical group. This is derived from
+          the 'medical_group_id' column in the source data.
+        tests:
+          - not_null
+          - unique
+      - name: name
+        description: The name of the medical group. This is derived from the 'groupname'
+          column in the source data.
+        data_type: varchar
+      - name: state
+        description: The state in which the medical group operates. This is directly
+          taken from the 'state' column in the source data.
+        data_type: varchar
+      - name: created_date
+        description: The date and time when the medical group was created. The format is
+          YYYY-MM-DD HH:MM:SS. If the date_group_created field in the source
+          data is null, this field will also be null.
+        data_type: timestamp
+      - name: number_of_users
+        description: The total number of users associated with the medical group. This
+          is a count of all users, regardless of their role or status.
+        data_type: bigint
+      - name: number_of_patients
+        description: The total number of patients associated with the medical group.
+          This is a count of all patients, regardless of their status.
+        data_type: bigint
+    description: "The raw_stellar_health_application__medical_group_list model is a
+      staging model that represents a list of medical groups. It is derived from
+      the 'medical_group_list' table in the 'stellar_health' schema of the
+      'stellar_health' database. The model includes the following columns: 'id'
+      which is the medical group id, 'name' which is the name of the medical
+      group, 'state' which is the state where the medical group is located,
+      'created_date' which is the date when the medical group was created,
+      'number_of_users' which is the number of users in the medical group, and
+      'number_of_patients' which is the number of patients in the medical group.
+      The 'created_date' column is formatted as a timestamp. If the
+      'date_group_created' in the source data is null, the 'created_date' will
+      also be null."
+  - name: raw_stellar_health_application__medical_group_user
+    columns:
+      - name: id
+        data_type: varchar
+        description: The unique identifier for each user in the medical group. This is a
+          string field.
+        tests:
+          - not_null
+          - unique
+      - name: medical_group_id
+        description: The unique identifier for the medical group that the user belongs
+          to. This is a string field.
+        data_type: varchar
+        tests:
+          - relationships:
+              field: id
+              to: ref('raw_stellar_health_application__medical_group_list')
+          - not_null
+      - name: username
+        description: The username of the user in the medical group. This is a string field.
+        data_type: varchar
+        tests:
+          - not_null
+          - unique
+      - name: password
+        description: The encrypted password for the medical group user. This is a
+          sensitive field and should be handled with care.
+        data_type: varchar
+        tests:
+          - not_null
+      - name: role
+        description: The role assigned to the medical group user. This determines the
+          level of access and permissions the user has within the medical group.
+        data_type: varchar
+        tests:
+          - accepted_values:
+              values:
+                - admin
+                - staff
+                - physician
+      - name: created_date
+        description: The timestamp indicating when the medical group user account was
+          created. This is automatically generated upon account creation.
+        data_type: timestamp
+      - name: last_login_date
+        description: This column represents the last date and time when the user logged
+          into the system. The data type is timestamp. If the original data is
+          null, it will remain null; otherwise, it is converted from a string to
+          a timestamp using the format '%Y-%m-%d %H:%M:%S.%f'.
+        data_type: timestamp
+    description: "The raw_stellar_health_application__medical_group_user model is a
+      transformation of the medical_group_user table from the stellar_health
+      schema in the stellar_health database. It includes the following columns:
+      id (which is the renamed user_id from the source table), medical_group_id,
+      username, password, role, created_date (which is the date_user_created
+      from the source table, transformed into a timestamp), and last_login_date
+      (which is the last_login_date from the source table, also transformed into
+      a timestamp)."
+  - name: raw_stellar_health_application__patient_demographics
+    columns:
+      - name: id
+        data_type: varchar
+        description: The unique identifier for each patient. This is derived from the
+          'patient_id' column in the source data.
+        tests:
+          - not_null
+          - unique
+      - name: age
+        data_type: bigint
+        description: The age of the patient. This is directly taken from the 'age'
+          column in the source data.
+        tests:
+          - positive_integer
+      - name: weight
+        data_type: double
+        description: The weight of the patient. This is directly taken from the 'weight'
+          column in the source data.
+        tests:
+          - positive_integer
+      - name: last_visit_date
+        description: The 'last_visit_date' column represents the date and time of the
+          patient's last visit to the clinic. It is a timestamp data type. If
+          the original data source has a null value for this field, it will also
+          be null in this model. The date and time are formatted as '%Y-%m-%d
+          %H:%M:%S.%f'.
+        data_type: timestamp
+    description: "The raw_stellar_health_application__patient_demographics model is
+      a transformation of the patient_demographics table from the stellar_health
+      schema in the stellar_health database. It includes the following columns:
+      id, age, weight, and last_login_date. The id column is a renamed version
+      of the patient_id column from the source table. The last_login_date column
+      is a transformation of the last_visit_date column from the source table,
+      where the original timestamp is converted to a string and then parsed back
+      into a timestamp. If the original last_visit_date is null, the
+      last_login_date will also be null."
+  - name: raw_stellar_health_application__patient_access_log
+    columns:
+      - name: id
+        data_type: varchar
+        description: The unique identifier for each patient access log. This is derived
+          from the 'access_id' column in the source data.
+        tests:
+          - not_null
+          - unique
+      - name: patient_id
+        description: The unique identifier for the patient associated with each access
+          log. This corresponds to the 'patient_id' column in the source data.
+        data_type: varchar
+        tests:
+          - relationships:
+              field: id
+              to: ref('raw_stellar_health_application__patient_demographics')
+          - not_null
+      - name: user_id
+        description: The unique identifier for the user who accessed the patient's data.
+          This corresponds to the 'user_id' column in the source data.
+        data_type: varchar
+        tests:
+          - relationships:
+              field: id
+              to: ref('raw_stellar_health_application__medical_group_user')
+          - not_null
+      - name: accessed_date
+        description: The timestamp when the patient's data was accessed. If the original
+          date_accessed value is NULL, this field will also be NULL. The date is
+          formatted as '%Y-%m-%d %H:%M:%S.%f'.
+        data_type: timestamp
+    description: "The raw_stellar_health_application__patient_access_log model is a
+      transformation of the patient_access_log table from the stellar_health
+      schema in the stellar_health database. It contains four columns: id,
+      patient_id, user_id, and accessed_date. The id column is a renamed version
+      of the access_id column from the source table. The accessed_date column is
+      a transformation of the date_accessed column from the source table, where
+      null values are preserved and non-null values are converted to a timestamp
+      format."
