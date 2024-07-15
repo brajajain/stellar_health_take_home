@@ -20,19 +20,37 @@ models:
         description: The unique identifier for each access event. This is a primary key
           in the fact__patient_access model.
         data_type: varchar
+        tests:
+          - not_null
+          - unique
+          - relationships:
+              field: id
+              to: ref('raw_stellar_health_application__patient_access_log')
       - name: user_id
         description: The unique identifier for each user. This is a foreign key that
           links to the 'id' field in the 'dim__user' table.
         data_type: varchar
+        tests:
+          - relationships:
+              field: id
+              to: ref('dim__user')
       - name: group_id
         description: The unique identifier for each medical group. This is a foreign key
           that links to the 'group_id' field in the 'dim__user' table.
         data_type: varchar
+        tests:
+          - relationships:
+              field: group_id
+              to: ref('dim__user')
       - name: patient_id
         description: The unique identifier for each patient. This is a foreign key that
           links to the 'patient_id' field in the
           'raw_stellar_health_application__patient_access_log' table.
         data_type: varchar
+        tests:
+          - relationships:
+              field: id
+              to: ref('dim__patient')
       - name: accessed_date
         description: The timestamp indicating when a patient's record was accessed by a
           user. This field is used to track the date and time of each access

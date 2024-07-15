@@ -4,10 +4,18 @@ models:
     columns:
       - name: id
         data_type: varchar
+        tests:
+          - relationships:
+              field: id
+              to: ref('raw_stellar_health_application__medical_group_user')
       - name: group_id
         data_type: varchar
         description: The unique identifier for each medical group. This is a foreign key
           that links to the 'group_id' field in the 'dim__user' table.
+        tests:
+          - relationships:
+              field: id
+              to: ref('raw_stellar_health_application__medical_group_list')
       - name: username
         data_type: varchar
         description: The username of the user in the medical group. This is a string field.
@@ -38,6 +46,10 @@ models:
     columns:
       - name: id
         data_type: varchar
+        tests:
+          - relationships:
+              field: id
+              to: ref('raw_stellar_health_application__medical_group_list')
       - name: name
         data_type: varchar
         description: The name of the medical group. This is derived from the 'groupname'
@@ -71,6 +83,10 @@ models:
     columns:
       - name: id
         data_type: varchar
+        tests:
+          - relationships:
+              field: id
+              to: ref('raw_stellar_health_application__patient_demographics')
       - name: age
         data_type: bigint
         description: The age of the patient. This is directly taken from the 'age'
